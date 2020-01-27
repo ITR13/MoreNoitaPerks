@@ -11,5 +11,6 @@ Mod to add perks to the game [Noita](https://noitagame.com/)
  * Acid body
  * Lava dweller
  * Undead
-
+ * High Resistance
+ 
 # Overwritten Files

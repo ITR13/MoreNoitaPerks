@@ -262,3 +262,17 @@ table.insert(perk_list,
 		} )
 	end,
 } )
+
+
+table.insert(perk_list,
+{
+	id = "HIGH_RESISTANCE",
+	ui_name = "High resistance",
+	ui_description = "Materials deal less damage",
+	perk_icon = PERK_ITEM_GFX_DIR.."high_resistance.png",
+	ui_icon = PERK_UI_GFX_DIR.."high_resistance.png",
+	usable_by_enemies = false,
+	func = function( entity_perk_item, entity_who_picked, item_name )
+		multiply_material_damage( entity_who_picked, 0.05 )
+	end,
+} )
