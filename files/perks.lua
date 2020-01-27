@@ -6,6 +6,28 @@ local PERK_SCRIPT_DIR = FILE_ROOT.."scripts/perks/"
 dofile_once( "data/scripts/lib/utilities.lua" )
 dofile_once( PERK_SCRIPT_DIR.."set_material_damage.lua" )
 
+
+local protection_radioactivity = get_perk_with_id(perk_list, "PROTECTION_RADIOACTIVITY")
+if protection_radioactivity ~= nil then
+	protection_radioactivity["func"] = function( entity_perk_item, entity_who_picked, item_name )
+		set_material_damage( entity_who_picked,
+		{
+			ice_radioactive_static		= 0,
+			ice_poison_static			= 0,
+			radioactive_gas				= 0,
+			radioactive_gas_static		= 0,
+			cloud_radioactive			= 0,
+			radioactive_liquid			= 0,
+			radioactive_liquid_fading	= 0,
+			radioactive_liquid_yellow	= 0,
+			ice_radioactive_glass		= 0,
+			ice_poison_glass			= 0,
+			rock_static_poison			= 0,
+			rock_static_radioactive		= 0,
+		} )
+	end
+end
+
 table.insert(perk_list,
 {
 	id = "HIGH_GRAVITY",
@@ -32,7 +54,7 @@ table.insert(perk_list,
 table.insert(perk_list,
 {
 	id = "CHEAP_REROLL",
-	ui_name = "Cheaper Rerolls",
+	ui_name = "Cheaper rerolls",
 	ui_description = "Rerolls cost less",
 	ui_icon = PERK_UI_GFX_DIR.."cheaper_rerolls.png",
 	perk_icon = PERK_ITEM_GFX_DIR.."cheaper_rerolls.png",
@@ -99,7 +121,7 @@ table.insert(perk_list,
 table.insert(perk_list,
 {
 	id = "REVENGE_RATS",
-	ui_name = "Revenge Rats",
+	ui_name = "Revenge rats",
 	ui_description = "Spawns a plague rat whenever you take damage",
 	ui_icon = PERK_UI_GFX_DIR.."revenge_rats.png",
 	perk_icon = PERK_ITEM_GFX_DIR.."revenge_rats.png",
@@ -118,7 +140,7 @@ table.insert(perk_list,
 table.insert(perk_list,
 {
 	id = "ACID_BODY",
-	ui_name = "Acid Body",
+	ui_name = "Acid body",
 	ui_description = "Immune to acids, but voletile towards water",
 	ui_icon = PERK_UI_GFX_DIR.."acid_body.png",
 	perk_icon = PERK_ITEM_GFX_DIR.."acid_body.png",
