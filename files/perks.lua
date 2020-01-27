@@ -3,8 +3,10 @@ local PERK_UI_GFX_DIR = FILE_ROOT.."ui_gfx/perk_icons/"
 local PERK_ITEM_GFX_DIR = FILE_ROOT.."items_gfx/perks/"
 local PERK_SCRIPT_DIR = FILE_ROOT.."scripts/perks/"
 
+dofile_once( "data/scripts/lib/utilities.lua" )
+dofile_once( PERK_SCRIPT_DIR.."set_material_damage.lua" )
 
-table.insert(perk_list, 
+table.insert(perk_list,
 {
 	id = "HIGH_GRAVITY",
 	ui_name = "High gravity",
@@ -27,7 +29,7 @@ table.insert(perk_list,
 } )
 
 
-table.insert(perk_list, 
+table.insert(perk_list,
 {
 	id = "CHEAP_REROLL",
 	ui_name = "Cheaper Rerolls",
@@ -44,7 +46,7 @@ table.insert(perk_list,
 } )
 
 
-table.insert(perk_list, 
+table.insert(perk_list,
 {
 	id = "BLEED_TELEPORTIUM",
 	ui_name = "Teleporting blood",
@@ -53,7 +55,7 @@ table.insert(perk_list,
 	perk_icon = PERK_ITEM_GFX_DIR.."teleportium_blood.png",
 	usable_by_enemies = true,
 	func = function( entity_perk_item, entity_who_picked, item_name )
-	
+
 		local damagemodels = EntityGetComponent( entity_who_picked, "DamageModelComponent" )
 		if( damagemodels ~= nil ) then
 			for i,damagemodel in ipairs(damagemodels) do
@@ -63,13 +65,13 @@ table.insert(perk_list,
 				ComponentSetValue( damagemodel, "blood_sprite_directional", "data/particles/bloodsplatters/bloodsplatter_directional_purple_$[1-3].xml" )
 				ComponentSetValue( damagemodel, "blood_sprite_large", "data/particles/bloodsplatters/bloodsplatter_purple_$[1-3].xml" )
 			end
-		end		
+		end
 	end,
 } )
 
 
 
-table.insert(perk_list, 
+table.insert(perk_list,
 {
 	id = "BLEED_FIRE",
 	ui_name = "Blazing blood",
@@ -79,7 +81,7 @@ table.insert(perk_list,
 	game_effect = "PROTECTION_FIRE",
 	usable_by_enemies = true,
 	func = function( entity_perk_item, entity_who_picked, item_name )
-	
+
 		local damagemodels = EntityGetComponent( entity_who_picked, "DamageModelComponent" )
 		if( damagemodels ~= nil ) then
 			for i,damagemodel in ipairs(damagemodels) do
@@ -94,7 +96,7 @@ table.insert(perk_list,
 } )
 
 
-table.insert(perk_list, 
+table.insert(perk_list,
 {
 	id = "REVENGE_RATS",
 	ui_name = "Revenge Rats",
@@ -103,12 +105,65 @@ table.insert(perk_list,
 	perk_icon = PERK_ITEM_GFX_DIR.."revenge_rats.png",
 	usable_by_enemies = true,
 	func = function( entity_perk_item, entity_who_picked, item_name )
-		EntityAddComponent( entity_who_picked, "LuaComponent", 
-		{ 
+		EntityAddComponent( entity_who_picked, "LuaComponent",
+		{
 			script_damage_received = PERK_SCRIPT_DIR.."revenge_rats.lua",
 			execute_every_n_frame = "-1",
 		} )
 		GenomeSetHerdId( entity_who_picked, "rat" )
 	end,
-}
-)
+} )
+
+
+table.insert(perk_list,
+{
+	id = "ACID_BODY",
+	ui_name = "Acid Body",
+	ui_description = "Immune to acids, but voletile towards water",
+	ui_icon = PERK_UI_GFX_DIR.."acid_body.png",
+	perk_icon = PERK_ITEM_GFX_DIR.."acid_body.png",
+	stackable = STACKABLE_MAX_AMOUNT,
+	usable_by_enemies = false,
+	func = function( entity_perk_item, entity_who_picked, item_name )
+		water_damage = get_material_damage( entity_who_picked, "water" )
+		if water_damage ~= nil then
+			water_damage = tostring(tonumber(water_damage) + 0.002)
+		else
+			water_damage = "0.002"
+		end
+		
+		set_material_damage( entity_who_picked,
+		{
+			acid			=	0,
+			ice_acid_static	=	0,
+			ice_acid_glass	=	0,
+			acid_gas		=	0,
+			acid_gas_static =	0,
+			water_static	=	water_damage,
+			water			=	water_damage,
+			water_temp		=	water_damage,
+			water_ice		=	water_damage,
+			water_swamp		=	water_damage,
+			swamp			=	water_damage,
+			water_salt		=	water_damage,
+			water_fading	=	water_damage,
+		} )
+	end,
+} )
+
+
+table.insert(perk_list,
+{
+	id = "LAVA_IMMUNITY",
+	ui_name = "Lava dweller",
+	ui_description = "Take no damage from lava, but be careful of fire!",
+	ui_icon = PERK_UI_GFX_DIR.."lava_immunity.png",
+	perk_icon = PERK_ITEM_GFX_DIR.."lava_immunity.png",
+	usable_by_enemies = false,
+	func = function( entity_perk_item, entity_who_picked, item_name )
+		set_material_damage( entity_who_picked,
+		{
+			lava = 0
+		} )
+	end,
+} )
