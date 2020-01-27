@@ -28,6 +28,26 @@ if protection_radioactivity ~= nil then
 	end
 end
 
+
+table.insert(perk_list,
+{
+	id = "GENOME_RANDOM_ALLIES",
+	ui_name = "$perk_random_allies",
+	ui_description = "$perkdesc_random_allies",
+	ui_icon = "data/ui_gfx/perk_icons/random_allies.png",
+	perk_icon = "data/items_gfx/perks/random_allies.png",
+	usable_by_enemies = false,
+	func = function( entity_perk_item, entity_who_picked, item_name )
+		local random_herds = {"ant", "apparition", "bat", "eel", "fire", "flower", "fly", "fungus", "ghost", "giant", "healer", "ice", "mage", "orcs", "robot", "slimes", "spider", "wolf", "worm", "zombie"}		
+		local pos_x, pos_y = EntityGetTransform( entity_who_picked )
+		SetRandomSeed( pos_x, pos_y )
+		local random_index = Random( #random_herds - 1 ) + 1
+		local new_herd = random_herds[ random_index ]
+		GenomeSetHerdId( entity_who_picked, new_herd )
+	end,
+} )
+
+
 table.insert(perk_list,
 {
 	id = "HIGH_GRAVITY",
@@ -186,6 +206,59 @@ table.insert(perk_list,
 		set_material_damage( entity_who_picked,
 		{
 			lava = 0
+		} )
+	end,
+} )
+
+
+table.insert(perk_list,
+{
+	id = "UNDEAD",
+	ui_name = "Undead",
+	ui_description = "In your head",
+	ui_icon = PERK_UI_GFX_DIR.."undead.png",
+	perk_icon = PERK_ITEM_GFX_DIR.."undead.png",
+	usable_by_enemies = false,
+	func = function( entity_perk_item, entity_who_picked, item_name )
+		local damagemodels = EntityGetComponent( entity_who_picked, "DamageModelComponent" )
+		if( damagemodels ~= nil ) then
+			for i,damagemodel in ipairs(damagemodels) do
+				ComponentSetValue( damagemodel, "blood_multiplier", "0.0" )
+			end
+		end
+		
+		local platformingcomponents = EntityGetComponent( entity_who_picked, "CharacterPlatformingComponent" )
+		if( platformingcomponents ~= nil ) then
+			for i,component in ipairs(platformingcomponents) do
+				local run_speed = tonumber( ComponentGetMetaCustom( component, "run_velocity" ) ) * 0.8
+				local vel_x = math.abs( tonumber( ComponentGetMetaCustom( component, "velocity_max_x" ) ) ) * 0.8
+				
+				local vel_x_min = 0 - vel_x
+				local vel_x_max = vel_x
+				
+				ComponentSetMetaCustom( component, "run_velocity", run_speed )
+				ComponentSetMetaCustom( component, "velocity_min_x", vel_x_min )
+				ComponentSetMetaCustom( component, "velocity_max_x", vel_x_max )
+			end
+		end
+		
+		GenomeSetHerdId( entity_who_picked, "zombie" )
+		set_material_damage( entity_who_picked,
+		{
+			magic_liquid_hp_regeneration			=  0.1,
+			magic_liquid_hp_regeneration_unstable	=  0.1,
+			ice_radioactive_static					= 0,
+			ice_poison_static						= 0,
+			radioactive_gas							= 0,
+			radioactive_gas_static					= 0,
+			cloud_radioactive						= 0,
+			radioactive_liquid						= 0,
+			radioactive_liquid_fading				= 0,
+			radioactive_liquid_yellow				= 0,
+			ice_radioactive_glass					= 0,
+			ice_poison_glass						= 0,
+			rock_static_poison						= 0,
+			rock_static_radioactive					= 0,
 		} )
 	end,
 } )

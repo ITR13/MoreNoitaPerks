@@ -2,6 +2,7 @@ Mod to add perks to the game [Noita](https://noitagame.com/)
 
 # Added perks
  * Toxic sludge immunity (additional effects)
+ * Random allies (fixed disabled perk)
  * High gravity
  * Cheaper rerolls
  * Teleporting blood
@@ -9,8 +10,6 @@ Mod to add perks to the game [Noita](https://noitagame.com/)
  * Revenge rats
  * Acid body
  * Lava dweller
- 
+ * Undead
+
 # Overwritten Files
-
-
-    
