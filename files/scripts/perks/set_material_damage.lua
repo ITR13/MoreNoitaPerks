@@ -1,4 +1,5 @@
 dofile_once( "data/scripts/lib/utilities.lua" )
+dofile_once( "data/scripts/lib/coroutines.lua" )
 
 function zip(...)
   local arrays, ans = {...}, {}
@@ -14,8 +15,17 @@ function zip(...)
     end
 end
 
+function quick_polymorph( entity )
+	EntityAddComponent( entity, "LuaComponent", { 
+		script_source_file="mods/perks_by_itr/files/scripts/perks/quick_polymorph.lua",
+		execute_every_n_frame=1,
+		execute_times=1,
+		remove_after_executed=1,
+	} )
+end
 
-function set_material_damage(entity, rebind_table)
+
+function set_material_damage( entity, rebind_table )
 	edit_component( entity, "DamageModelComponent", function(comp,vars)
 		names = ComponentGetValue( comp, "materials_that_damage", "")
 		values = ComponentGetValue( comp, "materials_how_much_damage", "" )
@@ -49,8 +59,8 @@ function set_material_damage(entity, rebind_table)
 		ComponentSetValue( comp, "materials_that_damage", names )
 		ComponentSetValue( comp, "materials_how_much_damage", new_values )
 	end)
-	local polymorph = GetGameEffectLoadTo( entity, "POLYMORPH", true );
-	ComponentSetValue( polymorph, "frames", 1 );
+	
+	quick_polymorph(entity)
 end
 
 function get_material_damage(entity, material_name)
@@ -88,6 +98,5 @@ function multiply_material_damage(entity, factor)
 
 		ComponentSetValue( comp, "materials_how_much_damage", new_values )
 	end)
-	local polymorph = GetGameEffectLoadTo( entity, "POLYMORPH", true );
-	ComponentSetValue( polymorph, "frames", 1 );
+	quick_polymorph( entity )
 end
